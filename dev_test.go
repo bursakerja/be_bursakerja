@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Fatwaff/be_bursa-kerja/model"
-	"github.com/Fatwaff/be_bursa-kerja/module"
+	"github.com/bursakerja/be_bursakerja/model"
+	"github.com/bursakerja/be_bursakerja/module"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
