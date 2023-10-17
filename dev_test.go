@@ -87,11 +87,11 @@ func TestGetLowonganFromID(t *testing.T){
 
 func TestSignUp(t *testing.T) {
 	var doc model.User
-	doc.FirstName = "Fatwa Fatahillah"
-	doc.LastName = "Fatah"
-	doc.Email = "fatwaff@gmail.com"
-	doc.Password = "fghjklio"
-	doc.Confirmpassword = "fghjklio"
+	doc.FirstName = "Dimas"
+	doc.LastName = "Ardianto"
+	doc.Email = "dimas@gmail.com"
+	doc.Password = "fghjkliow"
+	doc.Confirmpassword = "fghjkliow"
 	insertedID, err := module.SignUp(db, "user", doc)
 	if err != nil {
 		t.Errorf("Error inserting document: %v", err)
@@ -102,12 +102,20 @@ func TestSignUp(t *testing.T) {
 
 func TestLogIn(t *testing.T) {
 	var doc model.User
-	doc.Email = "fatwaff@gmail.com"
-	doc.Password = "fghjklio"
+	doc.Email = "dimas@gmail.com"
+	doc.Password = "fghjkliow"
 	user, err := module.LogIn(db, "user", doc)
 	if err != nil {
 		t.Errorf("Error getting document: %v", err)
 	} else {
-		fmt.Println("Welcome :", user)
+		fmt.Println("Welcome bang:", user)
 	}
+}
+
+func TestGeneratePrivateKeyPaseto(t *testing.T) {
+	privateKey, publicKey := module.GenerateKey()
+	fmt.Println("ini private key :", privateKey)
+	fmt.Println("ini public key :", publicKey)
+	hasil, err := module.Encode("fatwaff@gmail.com", privateKey)
+	fmt.Println("ini hasil :", hasil, err)
 }

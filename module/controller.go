@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"aidanwoods.dev/go-paseto"
-	"github.com/bursakerja/be_bursakerja/model"
 	"github.com/badoux/checkmail"
+	"github.com/bursakerja/be_bursakerja/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -197,6 +197,13 @@ func Encode(id string, privateKey string) (string, error) {
 	token.SetString("id", id)
 	secretKey, err := paseto.NewV4AsymmetricSecretKeyFromHex(privateKey)
 	return token.V4Sign(secretKey, nil), err
+}
+
+func GenerateKey() (privateKey, publicKey string) {
+	secretKey := paseto.NewV4AsymmetricSecretKey() // don't share this!!!
+	publicKey = secretKey.Public().ExportHex()     // DO share this one
+	privateKey = secretKey.ExportHex()
+	return privateKey, publicKey
 }
 
 func GCFReturnStruct(DataStuct any) string {
