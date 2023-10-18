@@ -58,6 +58,19 @@ func GetLowonganFromID(_id primitive.ObjectID) (doc model.Lowongan, err error) {
 	return doc, nil
 }
 
+func GetUserFromID(_id primitive.ObjectID) (doc model.User, err error) {
+	collection := MongoConnect().Collection("user")
+	filter := bson.M{"_id": _id}
+	err = collection.FindOne(context.TODO(), filter).Decode(&doc)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return doc, fmt.Errorf("no data found for ID %s", _id)
+		}
+		return doc, fmt.Errorf("error retrieving data for ID %s: %s", _id, err.Error())
+	}
+	return doc, nil
+}
+
 func GetAllDocs(db *mongo.Database, col string, docs interface{}) interface{} {
 	collection := db.Collection(col)
 	filter := bson.M{}
@@ -183,9 +196,28 @@ func GCFPostHandler(PASETOPRIVATEKEYENV, collectionname string, r *http.Request)
 	if err != nil {
 		Response.Message = "Gagal Encode Token : " + err.Error()
 	} else {
-		Response.Message = "Selamat Datang"
+		Response.Message = "Selamat Datang" + email
 		Response.Token = tokenstring
 	}		
+	return GCFReturnStruct(Response)
+}
+
+func GCFPostHandlerSignUp(collectionname string, r *http.Request) string {
+	var Response model.Credential
+	Response.Status = false
+	var datauser model.User
+	err := json.NewDecoder(r.Body).Decode(&datauser)
+	if err != nil {
+		Response.Message = "error parsing application/json: " + err.Error()
+		return GCFReturnStruct(Response)
+	}
+	_, err = SignUp(MongoConnect(), collectionname, datauser)
+	if err != nil {
+		Response.Message = "error LogIn: " + err.Error()
+		return GCFReturnStruct(Response)
+	}
+	Response.Status = true
+	Response.Message = "Halo " + datauser.FirstName + " " + datauser.LastName
 	return GCFReturnStruct(Response)
 }
 
