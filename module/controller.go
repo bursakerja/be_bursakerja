@@ -188,7 +188,7 @@ func GCFPostHandler(PASETOPRIVATEKEYENV, collectionname string, r *http.Request)
 	}
 	email, err := LogIn(MongoConnect(), collectionname, datauser)
 	if err != nil {
-		Response.Message = "error LogIn: " + err.Error()
+		Response.Message = err.Error()
 		return GCFReturnStruct(Response)
 	}
 	Response.Status = true
@@ -196,7 +196,7 @@ func GCFPostHandler(PASETOPRIVATEKEYENV, collectionname string, r *http.Request)
 	if err != nil {
 		Response.Message = "Gagal Encode Token : " + err.Error()
 	} else {
-		Response.Message = "Selamat Datang" + email
+		Response.Message = "Selamat Datang " + email
 		Response.Token = tokenstring
 	}		
 	return GCFReturnStruct(Response)
@@ -213,7 +213,7 @@ func GCFPostHandlerSignUp(collectionname string, r *http.Request) string {
 	}
 	_, err = SignUp(MongoConnect(), collectionname, datauser)
 	if err != nil {
-		Response.Message = "error LogIn: " + err.Error()
+		Response.Message = err.Error()
 		return GCFReturnStruct(Response)
 	}
 	Response.Status = true
